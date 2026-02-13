@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💕flower?? 💕</title>
+    <title>💕valentine 💕</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
     <style>
         /* colors n stuff */
@@ -409,11 +409,22 @@
 
         .rose-clickable {
             cursor: pointer;
-            transition: transform 0.2s ease;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform;
         }
 
         .rose-clickable:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
+            animation: roseHoverPulse 1s ease-in-out infinite;
+        }
+
+        .rose-clickable:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes roseHoverPulse {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.4)); }
+            50% { filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.8)); }
         }
 
         .rose-modal {
@@ -422,13 +433,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0);
+            backdrop-filter: blur(0px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 2000;
-            animation: fadeIn 0.3s ease-out;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+
+        .rose-modal.show {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(5px);
         }
 
         .rose-modal-content {
@@ -443,9 +459,16 @@
                 0 20px 60px rgba(233, 64, 87, 0.2),
                 0 5px 15px rgba(255, 105, 180, 0.15),
                 inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            animation: modalPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-align: center;
             overflow: hidden;
+            will-change: transform, opacity;
+            transform: scale(0.3) translateY(30px);
+            opacity: 0;
+            transition: transform 0s, opacity 0s;
+        }
+
+        .rose-modal.show .rose-modal-content {
+            animation: modalPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         .rose-modal-content::before {
@@ -466,14 +489,15 @@
 
         @keyframes modalPop {
             0% {
-                transform: scale(0.3) translateY(30px);
+                transform: scale(0.5) translateY(40px) rotate(-5deg);
                 opacity: 0;
             }
-            50% {
-                transform: scale(1.05) translateY(-5px);
+            60% {
+                transform: scale(1.03) translateY(-8px) rotate(2deg);
+                opacity: 1;
             }
             100% {
-                transform: scale(1) translateY(0);
+                transform: scale(1) translateY(0) rotate(0deg);
                 opacity: 1;
             }
         }
@@ -490,13 +514,26 @@
             font-size: 24px;
             color: var(--color-primary);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             padding: 0;
             line-height: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
+            opacity: 0;
+            transform: scale(0) rotate(-90deg);
+        }
+
+        .rose-modal.show .rose-modal-close {
+            animation: closeButtonIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+        }
+
+        @keyframes closeButtonIn {
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
         }
 
         .rose-modal-close:hover {
@@ -534,6 +571,12 @@
             font-family: var(--font-display);
             position: relative;
             z-index: 1;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        .rose-modal.show .rose-modal-title {
+            animation: slideInFade 0.5s ease-out 0.15s forwards;
         }
 
         .rose-modal-message {
@@ -547,6 +590,12 @@
             position: relative;
             z-index: 1;
             padding: 0 5px;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        .rose-modal.show .rose-modal-message {
+            animation: slideInFade 0.5s ease-out 0.25s forwards;
         }
 
         .rose-modal-icons {
@@ -557,6 +606,26 @@
             gap: 18px;
             position: relative;
             z-index: 1;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .rose-modal.show .rose-modal-icons {
+            animation: scaleInFade 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s forwards;
+        }
+
+        @keyframes slideInFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleInFade {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .rose-modal-icons span {
@@ -850,8 +919,17 @@
                 margin-bottom: 8px;
             }
         }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
     </style>
-    <script defer src="https://cdn.vercel-insights.com/v1/script.debug.js"></script>
     <script defer src="https://cdn.vercel-insights.com/v1/script.debug.js"></script>
 </head>
 <body>
@@ -862,6 +940,9 @@
     
     <!-- Overlay -->
     <div class="video-overlay"></div>
+
+    <!-- Background Music -->
+    <audio id="bgMusic" src="song.mp3" loop preload="auto"></audio>
 
     <!-- Main Container -->
     <div class="container">
@@ -877,7 +958,7 @@
 
             <!-- Romantic Text -->
             <div class="romantic-text">
-                meri fool ko phool chie??
+                Will you be my valentine??
             </div>
 
             <!-- Buttons -->
@@ -972,13 +1053,15 @@
 
         // messages for each rose
         const roseMessages = [
-            "Happy Valentine's Day to the one who fills my life with endless happiness, beautiful memories, and a love that grows stronger with every passing day.",
-            "Being with you has shown me what true love really means — comfort in silence, laughter in chaos, and peace in each other's presence.",
-            "You are not just special to me, you are the reason my heart feels lighter, my days feel brighter, and my future feels more hopeful.",
+            " Happy Valentine’s Day to the one who fills my life with endless happiness, beautiful memories, and a love that grows stronger with every passing day.",
+            "Being with you has shown me what true love really means comfort in silence, laughter in chaos, and peace in each other’s presence.",
+            "Bina makeup ke bhi tu qayamat lagti hai,\nTeri ye saadgi hi toh meri kamzori lagti hai.You are not just special to me, you are the reason my heart feels lighter, my days feel brighter, and my future feels more hopeful.",
             "Every moment spent with you becomes a memory I cherish deeply, because your love turns even the simplest times into something magical.",
-            "I feel incredibly lucky to have someone who understands me, supports me, and stands by me no matter what life brings.",
+            " I feel incredibly lucky to have someone who understands me, supports me, and stands by me no matter what life brings.",
+            "Tujhe jitni baar dekhun, utna kam lagta hai,\nHar roz tujhse ek naya ishq hone lagta hai.You inspire me to be better every day, and your presence in my life is a gift I will always be thankful for.",
             "Loving you is the easiest and most beautiful thing I have ever done, and I promise to always value and respect what we share.",
-            "You inspire me to be better every day, and your presence in my life is a gift I will always be thankful for."
+            "Meri lakiron mein tera naam hona kismat hai meri,\nTu paas hai, toh bas jannat hai ye zindagi meri.",
+            "Teri yaad mein guzar jaati hai har shaam meri,\nTu hi hai sabse pyaari, sabse khaas pehchaan meri."
         ];
 
         function handleYes() {
@@ -1133,10 +1216,22 @@
         function showRoseMessage(index, event) {
             const modal = document.getElementById('roseModal');
             const messageEl = document.getElementById('roseMessage');
+            
+            // Prevent event bubbling
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            // Set message content
             messageEl.textContent = roseMessages[index % roseMessages.length];
+            
+            // Show modal with smooth transition
             modal.style.display = 'flex';
             requestAnimationFrame(() => {
-                modal.classList.add('show');
+                requestAnimationFrame(() => {
+                    modal.classList.add('show');
+                });
             });
             
             // Create love particles - use touch coords if available
@@ -1150,7 +1245,7 @@
             modal.classList.remove('show');
             setTimeout(() => {
                 modal.style.display = 'none';
-            }, 300);
+            }, 400);
         }
 
         function createLoveParticles(x, y) {
@@ -1206,6 +1301,37 @@
                 }, i * 500);
             }
         });
+
+        // Background Music - Start from 2 minutes
+        const bgMusic = document.getElementById('bgMusic');
+        let musicStarted = false;
+
+        bgMusic.volume = 0.5;
+        bgMusic.load();
+
+        const startMusic = () => {
+            if (musicStarted) return;
+            bgMusic.currentTime = 120; // Start at 2 minutes
+            bgMusic.play().then(() => {
+                musicStarted = true;
+            }).catch(() => {});
+        };
+
+        // Try to play when metadata is loaded
+        bgMusic.addEventListener('loadedmetadata', () => {
+            setTimeout(startMusic, 100);
+        });
+
+        // Play music on first user interaction
+        const playOnInteraction = () => {
+            if (!musicStarted) {
+                startMusic();
+            }
+        };
+        
+        document.addEventListener('click', playOnInteraction, { once: true });
+        document.addEventListener('touchstart', playOnInteraction, { once: true });
+        document.addEventListener('keydown', playOnInteraction, { once: true });
     </script>
 </body>
 </html>
